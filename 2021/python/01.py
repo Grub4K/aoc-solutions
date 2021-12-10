@@ -9,13 +9,9 @@ from itertools import tee
 
 
 def nwise(iterable, n):
-    iterators = list(map(iter, tee(iterable, n)))
-
-    for count, iterator in enumerate(iterators):
-        for _ in range(count):
-            next(iterator)
-
-    return zip(*iterators)
+    iterable = list(iterable)
+    return (tuple(iterable[i:i+n])
+        for i in range(len(iterable) - n + 1))
 
 
 def process_data(data, grouplength):
