@@ -44,7 +44,6 @@ def calculate_intersections(lines, process_diagonals):
     return sum(1 for value in points.values() if value > 1)
 
 
-lines = []
 with open('../input/05.txt') as file:
     lines = [*map(parse_line, file)]
 
