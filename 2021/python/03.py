@@ -1,7 +1,3 @@
-from itertools import groupby
-
-
-
 with open('../input/03.txt') as file:
     data = list(file)
 
