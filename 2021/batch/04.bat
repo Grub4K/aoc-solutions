@@ -1,25 +1,24 @@
 @echo off
 setlocal EnableDelayedExpansion
 
+
+
+set "inputFile=..\input\04.txt"
+
 :: Read draw order and boards as linear arrays
-set "drawOrder="
-set "counter=######"
-set "boardCount=0"
-for /F "usebackq delims=" %%a in (
-    "..\input\04.txt"
-) do (
-    if not defined drawOrder (
-        set "drawOrder=%%a"
-    ) else (
-        if "!counter:~5!"=="#" (
-            set /a "boardCount+=1"
-            set "boardsCopy[!boardCount!]= "
-            set "counter=#"
+for /F "delims=" %%a in ('type "!inputFile!" ^| find /c /v ""') do (
+    set /a "boardCount=%%a/6"
+)
+
+<"!inputFile!" (
+    set /p "drawOrder="
+    for /L %%a in (1 1 !boardCount!) do (
+        set "boardsCopy[%%a]="
+        set "input="
+        for /L %%. in (0 1 5) do (
+            set /p "input="
+            set "boardsCopy[%%a]=!boardsCopy[%%a]!!input! "
         )
-        for %%b in (!boardCount!) do (
-            set "boardsCopy[%%b]=!boardsCopy[%%b]!%%a "
-        )
-        set "counter=!counter!#"
     )
 )
 
