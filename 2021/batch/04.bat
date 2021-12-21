@@ -13,20 +13,20 @@ for /F "delims=" %%a in ('type "!inputFile!" ^| find /c /v ""') do (
 <"!inputFile!" (
     set /p "drawOrder="
     for /L %%a in (1 1 !boardCount!) do (
-        set "boardsCopy[%%a]="
+        set "boards[%%a]="
         set "input="
         for /L %%. in (0 1 5) do (
             set /p "input="
-            set "boardsCopy[%%a]=!boardsCopy[%%a]!!input! "
+            set "boards[%%a]=!boards[%%a]!!input! "
         )
     )
 )
 
 :: Prepare board for efficient use
 for /L %%a in (1 1 !boardCount!) do (
-    set "boardsCopy[%%a]=!boardsCopy[%%a]:  = '!"
-    set "boardsCopy[%%a]=!boardsCopy[%%a]: =+!"
-    set "boardsCopy[%%a]=!boardsCopy[%%a]:'= !"
+    set "boards[%%a]=!boards[%%a]:  = '!"
+    set "boards[%%a]=!boards[%%a]: =+!"
+    set "boards[%%a]=!boards[%%a]:'= !"
 )
 
 :: Prepare a macro for helping finding winning boards
@@ -40,39 +40,33 @@ for /L %%x in (0 1 4) do (
     set "#winLookup=!#winLookup!#^!tempBoard:~!position!,10^!#"
 )
 
-:: Tasks differ only in which board we take, first winning or last
-:: Change flag for if to do early exit or not
-for %%f in ( "1" "" ) do (
-    %= Restore board states from copy =%
-    for /L %%a in (1 1 !boardCount!) do (
-        set "boards[%%a]=!boardsCopy[%%a]!"
-    )
 
-    %= Execute moves one by one =%
-    set "foundWinning="
-    for %%a in ( !drawOrder! ) do (
-        if not defined foundWinning (
-            %= Pad current number =%
-            set "currentNumber= %%a"
-            set "currentNumber=!currentNumber:~-2!"
-            for %%b in ("!currentNumber!") do (
-                %= Execute move on every board =%
-                for /L %%c in (1 1 !boardCount!) do (
-                    set "boards[%%c]=!boards[%%c]:+%%~b+=+XX+!"
-                    %= Check if winning =%
-                    set "tempBoard=!boards[%%c]:+=!"
-                    set "lookup=%#winLookup%"
-                    if not "!lookup:XXXXXXXXXX=!"=="!lookup!" (
-                        %= Found a winning board =%
-                        set /a "boardSum=0!boards[%%c]!0, boardValue=boardSum*currentNumber"
-                        set "foundWinning=%%~f"
-                        %= Empty board, so it cannot be picked again =%
-                        set "boards[%%c]=#"
+:: Execute moves one by one
+set "firstWinning="
+for %%a in ( !drawOrder! ) do (
+    %= Pad current number =%
+    set "currentNumber= %%a"
+    set "currentNumber=!currentNumber:~-2!"
+    for %%b in ("!currentNumber!") do (
+        %= Execute move on every board =%
+        for /L %%c in (1 1 !boardCount!) do (
+            if not "!boards[%%c]!"=="#" (
+                set "boards[%%c]=!boards[%%c]:+%%~b+=+XX+!"
+                %= Check if winning =%
+                set "tempBoard=!boards[%%c]:+=!"
+                set "lookup=%#winLookup%"
+                if not "!lookup:XXXXXXXXXX=!"=="!lookup!" (
+                    %= Found a winning board =%
+                    set /a "boardSum=0!boards[%%c]!0, boardValue=boardSum*currentNumber"
+                    if not defined firstWinning (
+                        set "firstWinning=!boardValue!"
                     )
+                    %= Empty board, so it cannot be picked again =%
+                    set "boards[%%c]=#"
                 )
             )
         )
     )
-    echo !boardValue!
 )
-exit /B
+echo !firstWinning!
+echo !boardValue!
