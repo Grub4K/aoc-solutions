@@ -1,23 +1,20 @@
-from collections import defaultdict
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 
-
-
-Point = namedtuple('Point', ['X', 'Y'])
+Point = namedtuple("Point", ["X", "Y"])
 
 
 def parse_line(line):
     def to_point(in_str):
-        x, _, y = in_str.partition(',')
+        x, _, y = in_str.partition(",")
         return Point(int(x), int(y))
 
-    from_str, _, to_str = line.partition(' -> ')
+    from_str, _, to_str = line.partition(" -> ")
     return (to_point(from_str), to_point(to_str))
 
 
 def make_range(a, b):
-    step = 1 if a<=b else -1
-    return range(a, b+step, step)
+    step = 1 if a <= b else -1
+    return range(a, b + step, step)
 
 
 def calculate_intersections(lines, process_diagonals):
@@ -44,7 +41,7 @@ def calculate_intersections(lines, process_diagonals):
     return sum(1 for value in points.values() if value > 1)
 
 
-with open('../input/05.txt') as file:
+with open("../input/05.txt") as file:
     lines = [*map(parse_line, file)]
 
 print(calculate_intersections(lines, False))

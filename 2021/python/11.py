@@ -1,12 +1,7 @@
 from queue import Queue
 
-
-
-with open('../input/11.txt') as file:
-    data = [
-        [*map(int, line.rstrip())]
-        for line in file
-    ]
+with open("../input/11.txt") as file:
+    data = [[*map(int, line.rstrip())] for line in file]
 
 y_range = range(len(data))
 x_range = range(len(data[0]))
@@ -39,8 +34,8 @@ def run_round():
 
             # Add to the queue
             for x_shift, y_shift in shifts:
-                x_new = x+x_shift
-                y_new = y+y_shift
+                x_new = x + x_shift
+                y_new = y + y_shift
                 if x_new in x_range and y_new in y_range:
                     queue.put((x_new, y_new))
         else:
@@ -49,6 +44,7 @@ def run_round():
     for x, y in has_flashed:
         data[y][x] = 0
     return len(has_flashed)
+
 
 def all_flashed():
     return sum(sum(line) for line in data) == 0
@@ -66,4 +62,4 @@ while not all_flashed():
     step += 1
 
 print(flashes)
-print(step+1)
+print(step + 1)

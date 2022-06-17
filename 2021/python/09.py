@@ -1,31 +1,21 @@
-from queue import Queue
 from heapq import nlargest
-
-
+from queue import Queue
 
 SHIFTS = [
-    (-1,  0),
-    ( 1,  0),
-    ( 0, -1),
-    ( 0,  1),
+    (-1, 0),
+    (1, 0),
+    (0, -1),
+    (0, 1),
 ]
 
 
-with open('../input/09.txt') as file:
-    data = [
-        [*map(int, line.strip())]
-        for line in file
-    ]
+with open("../input/09.txt") as file:
+    data = [[*map(int, line.strip())] for line in file]
 
 y_range = range(len(data))
 x_range = range(len(data[0]))
 
-points = {
-    (x, y)
-    for y in y_range
-    for x in x_range
-    if data[y][x] != 9
-}
+points = {(x, y) for y in y_range for x in x_range if data[y][x] != 9}
 
 queue = Queue()
 
@@ -44,7 +34,7 @@ while points:
         current = data[y][x]
         is_smaller = True
         for x_shift, y_shift in SHIFTS:
-            x_shifted, y_shifted = test_point = (x+x_shift, y+y_shift)
+            x_shifted, y_shifted = test_point = (x + x_shift, y + y_shift)
             # Task 1
             if x_shifted in x_range and y_shifted in y_range:
                 if current >= data[y_shifted][x_shifted]:
@@ -56,7 +46,7 @@ while points:
                 basin_counts[-1] += 1
 
         if is_smaller:
-            risk_levels.append(current+1)
+            risk_levels.append(current + 1)
 
 print(sum(risk_levels))
 

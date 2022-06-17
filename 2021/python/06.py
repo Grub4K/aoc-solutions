@@ -1,11 +1,9 @@
 from collections import Counter
 
-
-
-with open('../input/06.txt') as file:
+with open("../input/06.txt") as file:
     line = file.readline()
 
-counter_dict = Counter(map(int, line.split(',')))
+counter_dict = Counter(map(int, line.split(",")))
 fish_counter = [counter_dict.get(index, 0) for index in range(9)]
 
 

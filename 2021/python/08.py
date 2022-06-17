@@ -11,8 +11,7 @@ def first(iterable):
 
 
 def filter_wire(probes, wires):
-    return {probe for probe in probes
-        if probe.issuperset(wires)}
+    return {probe for probe in probes if probe.issuperset(wires)}
 
 
 def solve_five_segments(probes, trans):
@@ -32,8 +31,7 @@ def solve_six_segments(probes, trans):
 
 
 def filter_length(probes, length):
-    return {wires for wires in probes
-        if len(wires)==length}
+    return {wires for wires in probes if len(wires) == length}
 
 
 def find_numbers(data):
@@ -45,28 +43,26 @@ def find_numbers(data):
         trans[2], trans[3], trans[5] = solve_five_segments(filter_func(5), trans)
         trans[0], trans[6], trans[9] = solve_six_segments(filter_func(6), trans)
         translation = {
-            frozenset(lookup): str(number)
-            for number, lookup in trans.items()
+            frozenset(lookup): str(number) for number, lookup in trans.items()
         }
 
-        yield int(''.join(translation[output] for output in outputs))
+        yield int("".join(translation[output] for output in outputs))
 
 
 def parse_line(line):
     def process(dataset):
-        return tuple(frozenset(wires)
-            for wires in dataset.split(' '))
+        return tuple(frozenset(wires) for wires in dataset.split(" "))
 
-    probe, _, output = line.rstrip().partition(' | ')
+    probe, _, output = line.rstrip().partition(" | ")
     return process(probe), process(output)
 
-with open('../input/08.txt') as file:
+
+with open("../input/08.txt") as file:
     data = list(map(parse_line, file))
 
 
 _, length_filter = zip(*UNIQUE_LENGTHS)
-print(sum(1 for _, values in data for value in values
-    if len(value) in length_filter))
+print(sum(1 for _, values in data for value in values if len(value) in length_filter))
 
 
 print(sum(find_numbers(data)))

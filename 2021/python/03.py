@@ -1,4 +1,4 @@
-with open('../input/03.txt') as file:
+with open("../input/03.txt") as file:
     data = list(file)
 
 
@@ -18,9 +18,10 @@ for count in counts:
 bitmask = (1 << number_of_bits) - 1
 print(accumulator * (~accumulator & bitmask))
 
+
 def filter_data(data, is_co2=False):
-    predicate_one = lambda item: item[position] == '1'
-    predicate_zero = lambda item: item[position] == '0'
+    predicate_one = lambda item: item[position] == "1"
+    predicate_zero = lambda item: item[position] == "0"
     filtered_data = data.copy()
 
     for position in range(number_of_bits):
@@ -37,6 +38,7 @@ def filter_data(data, is_co2=False):
             break
 
     return int(filtered_data[0], 2)
+
 
 oxygen, co2 = filter_data(data), filter_data(data, is_co2=True)
 print(oxygen * co2)

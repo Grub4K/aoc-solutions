@@ -1,23 +1,21 @@
 from queue import LifoQueue
 
-
-
-with open('../input/10.txt') as file:
+with open("../input/10.txt") as file:
     data = [line.strip() for line in file]
 
 syntax_values = {
-    ')': 3,
-    ']': 57,
-    '}': 1197,
-    '>': 25137,
+    ")": 3,
+    "]": 57,
+    "}": 1197,
+    ">": 25137,
 }
 completion_values = {
-    ')': 1,
-    ']': 2,
-    '}': 3,
-    '>': 4,
+    ")": 1,
+    "]": 2,
+    "}": 3,
+    ">": 4,
 }
-brace_lookup = dict(zip('([{<', ')]}>'))
+brace_lookup = dict(zip("([{<", ")]}>"))
 
 
 completion_scores = []
@@ -42,7 +40,6 @@ for line in data:
 print(syntax_error_score)
 
 completion_scores.sort()
-middle_score = completion_scores[(len(completion_scores))//2]
+middle_score = completion_scores[(len(completion_scores)) // 2]
 
 print(middle_score)
-
