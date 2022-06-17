@@ -1,13 +1,3 @@
-try:
-    from itertools import pairwise
-except ImportError:
-    # for py <3.10
-    def pairwise(iterable):
-        return nwise(iterable, 2)
-from itertools import tee
-
-
-
 def nwise(iterable, n):
     iterable = list(iterable)
     return (tuple(iterable[i:i+n])
@@ -18,7 +8,7 @@ def process_data(data, grouplength):
     sum_of_n = list(map(sum, nwise(data, grouplength)))
 
     count = 0
-    for first, second in pairwise(sum_of_n):
+    for first, second in nwise(sum_of_n, 2):
         if second > first:
             count += 1
 
