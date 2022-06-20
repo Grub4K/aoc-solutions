@@ -1,4 +1,4 @@
-from collections import defaultdict, namedtuple
+from collections import Counter, namedtuple
 
 Point = namedtuple("Point", ["X", "Y"])
 
@@ -13,30 +13,24 @@ def parse_line(line):
 
 
 def make_range(a, b):
-    step = 1 if a <= b else -1
-    return range(a, b + step, step)
+    if a == b:
+        while True:
+            yield a
+
+    yield from range(min(a, b), max(a, b) + 1)
 
 
 def calculate_intersections(lines, process_diagonals):
-    points = defaultdict(int)
+    points = Counter()
     for from_, to in lines:
-        # Compute diagonals
         if from_.X != to.X and from_.Y != to.Y:
-            if process_diagonals:
-                x_range = make_range(from_.X, to.X)
-                y_range = make_range(from_.Y, to.Y)
-                for x, y in zip(x_range, y_range):
-                    points[(x, y)] += 1
-        # Compute verticals
-        elif from_.X == to.X:
-            for y in make_range(from_.Y, to.Y):
-                point = (to.X, y)
-                points[point] += 1
-        # Compute horizontal
-        elif from_.Y == to.Y:
-            for x in make_range(from_.X, to.X):
-                point = (x, to.Y)
-                points[point] += 1
+            if not process_diagonals:
+                continue
+
+        x_range = make_range(from_.X, to.X)
+        y_range = make_range(from_.Y, to.Y)
+        points.update(zip(x_range, y_range))
+
     # Count of values above 1 (number of intersections)
     return sum(1 for value in points.values() if value > 1)
 
