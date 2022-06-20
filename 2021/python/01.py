@@ -1,5 +1,4 @@
 def nwise(iterable, n):
-    iterable = list(iterable)
     return (tuple(iterable[i : i + n]) for i in range(len(iterable) - n + 1))
 
 
