@@ -62,7 +62,7 @@ def main(year, day, test=False):
 
         try:
             input_path = year_path.joinpath("input", day_path.with_suffix(".txt").name)
-            if test:
+            if test:  # Use input files with a `#` suffixed for debugging
                 input_path = input_path.with_stem(f"{input_path.stem}#")
             input_data = input_path.read_text().splitlines(keepends=False)
 
@@ -91,7 +91,7 @@ def main(year, day, test=False):
 
         try:
             for part in "ab":
-                solution = next(solutions)
+                solution = next(solutions, None)
                 if solution is not None:
                     print(f"{day_id} {part}: {solution}")
 
