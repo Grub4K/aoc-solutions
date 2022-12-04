@@ -5,21 +5,21 @@ def process_line(line):
     return LOOKUP[a], LOOKUP[b]
 
 
-def get_win_state(own_hand, other_hand):
+def get_result(own_hand, other_hand):
     return (own_hand - other_hand + 1) % 3
 
 
-def get_winning_hand(other_hand, win_state):
-    return (win_state + other_hand - 1) % 3
+def get_own_hand(other_hand, result):
+    return (result + other_hand - 1) % 3
 
 
 def run(moves):
     yield sum(
-        (own_hand + 1) + (get_win_state(own_hand, other_hand) * 3)
+        (own_hand + 1) + (get_result(own_hand, other_hand) * 3)
         for other_hand, own_hand in moves
     )
 
     yield sum(
-        (get_winning_hand(other_hand, win_state) + 1) + (win_state * 3)
-        for other_hand, win_state in moves
+        (get_own_hand(other_hand, result) + 1) + (result * 3)
+        for other_hand, result in moves
     )
