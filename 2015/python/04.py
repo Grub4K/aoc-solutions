@@ -1,17 +1,19 @@
 from hashlib import md5
 from itertools import count
 
-with open("../input/04.txt") as file:
-    secret = file.read().strip()
 
-found_five = False
-for number in count():
-    data = f"{secret}{number}".encode()
-    digest = md5(data).hexdigest()
-    if not found_five and digest.startswith("00000"):
-        found_five = True
-        print(number)
+def run(input_data):
+    secret = input_data[0].encode()
 
-    if digest.startswith("000000"):
-        print(number)
-        break
+    found_five = False
+    for number in count():
+        md5()
+        data = secret + str(number).encode()
+        digest = md5(data).hexdigest()
+        if not found_five and digest.startswith("00000"):
+            found_five = True
+            yield number
+
+        if digest.startswith("000000"):
+            yield number
+            return

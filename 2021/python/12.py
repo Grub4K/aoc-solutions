@@ -1,17 +1,20 @@
 from collections import defaultdict
 
-paths = defaultdict(set)
-with open("../input/12.txt") as file:
-    for line in file:
+
+def process_data(data):
+    paths = defaultdict(set)
+    for line in data:
         key, _, value = line.rstrip().partition("-")
         paths[key].add(value)
         paths[value].add(key)
 
+    return paths
 
-def find_paths(budget):
+
+def find_paths(paths, budget):
     def _find_paths(state, visited, budget):
         if state.islower():
-            visited.add(state)
+            visited = visited | {state}
 
         accum = 0
         for new_state in paths[state]:
@@ -28,12 +31,13 @@ def find_paths(budget):
                     continue
                 new_small_budget -= 1
 
-            accum += _find_paths(new_state, visited.copy(), new_small_budget)
+            accum += _find_paths(new_state, visited, new_small_budget)
 
         return accum
 
     return _find_paths("start", set(), budget)
 
 
-print(find_paths(0))
-print(find_paths(1))
+def run(paths):
+    yield find_paths(paths, 0)
+    yield find_paths(paths, 1)

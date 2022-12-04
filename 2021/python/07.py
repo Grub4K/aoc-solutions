@@ -1,23 +1,21 @@
-with open("../input/07.txt") as file:
-    line = file.readline()
-
-values = [*map(int, line.split(","))]
-value_range = range(min(values), max(values) + 1)
+def process_data(lines):
+    return [*map(int, lines[0].split(","))]
 
 
-def distance(a):
+def normal_distance(a):
     return lambda b: abs(a - b)
 
 
-print(min(sum(map(distance(a), values)) for a in value_range))
-
-
 def fuel_distance(a):
-    def _fuel(b):
+    def fuel(b):
         n = abs(a - b)
         return n * (n + 1) // 2
 
-    return _fuel
+    return fuel
 
 
-print(min(sum(map(fuel_distance(a), values)) for a in value_range))
+def run(input_data):
+    value_range = range(min(input_data), max(input_data) + 1)
+
+    for distance in normal_distance, fuel_distance:
+        yield min(sum(map(distance(a), input_data)) for a in value_range)

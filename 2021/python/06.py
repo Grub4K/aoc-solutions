@@ -1,26 +1,19 @@
-from collections import Counter
+def process_data(lines):
+    from collections import Counter
 
-with open("../input/06.txt") as file:
-    line = file.readline()
-
-counter_dict = Counter(map(int, line.split(",")))
-fish_counter = [counter_dict.get(index, 0) for index in range(9)]
+    counter_dict = Counter(map(int, lines[0].split(",")))
+    return [counter_dict.get(index, 0) for index in range(9)]
 
 
-from_ = 0
-to = 6
+def run(fish_counter):
+    from_ = 0
+    to = 6
 
-for _ in range(80):
-    to = (to + 1) % 9
-    fish_counter[to] += fish_counter[from_]
-    from_ = (from_ + 1) % 9
+    for index in range(256):
+        to = (to + 1) % 9
+        fish_counter[to] += fish_counter[from_]
+        from_ = (from_ + 1) % 9
+        if index == 79:
+            yield sum(fish_counter)
 
-print(sum(fish_counter))
-
-
-for _ in range(256 - 80):
-    to = (to + 1) % 9
-    fish_counter[to] += fish_counter[from_]
-    from_ = (from_ + 1) % 9
-
-print(sum(fish_counter))
+    yield sum(fish_counter)

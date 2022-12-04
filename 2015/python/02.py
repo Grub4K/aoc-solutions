@@ -1,4 +1,4 @@
-def parse_line(line):
+def process_line(line):
     a, b, c = line.split("x")
     return int(a), int(b), int(c)
 
@@ -15,8 +15,6 @@ def ribbon(data):
         yield 2 * ribbon_base + length * width * height
 
 
-with open("../input/02.txt") as file:
-    data = [parse_line(line) for line in file]
-
-print(sum(wrapping_paper(data)))
-print(sum(ribbon(data)))
+def run(input_data):
+    yield sum(wrapping_paper(input_data))
+    yield sum(ribbon(input_data))

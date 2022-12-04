@@ -1,15 +1,10 @@
 from collections import Counter
-from itertools import pairwise
-
-with open("../input/03.txt") as file:
-    data = file.read()
 
 
-def create_positions(data):
-    positions = Counter()
+def yield_positions(data):
     x = y = 0
+    yield (x, y)
 
-    positions.update([(x, y)])
     for direction in data:
         if direction == ">":
             x += 1
@@ -20,12 +15,14 @@ def create_positions(data):
         elif direction == "v":
             y -= 1
 
-        positions.update([(x, y)])
+        yield (x, y)
 
-    return positions
 
-print(len(create_positions(data)))
+def run(data):
+    data = data[0]
 
-positions = create_positions(data[::2])
-positions.update(create_positions(data[1::2]))
-print(len(positions))
+    yield len(Counter(yield_positions(data)))
+
+    positions = Counter(yield_positions(data[::2]))
+    positions.update(yield_positions(data[1::2]))
+    yield len(positions)

@@ -4,29 +4,26 @@ def process_line(line):
     return command, count
 
 
-with open("../input/02.txt") as file:
-    data = list(map(process_line, file))
+def run(input_data):
+    x = depth = 0
+    for command, count in input_data:
+        if command == "forward":
+            x += count
+        elif command == "down":
+            depth += count
+        elif command == "up":
+            depth -= count
 
-x = depth = 0
-for command, count in data:
-    if command == "forward":
-        x += count
-    elif command == "down":
-        depth += count
-    elif command == "up":
-        depth -= count
+    yield x * depth
 
-print(x * depth)
+    x = depth = aim = 0
+    for command, count in input_data:
+        if command == "forward":
+            x += count
+            depth += aim * count
+        elif command == "down":
+            aim += count
+        elif command == "up":
+            aim -= count
 
-
-x = depth = aim = 0
-for command, count in data:
-    if command == "forward":
-        x += count
-        depth += aim * count
-    elif command == "down":
-        aim += count
-    elif command == "up":
-        aim -= count
-
-print(x * depth)
+    yield x * depth

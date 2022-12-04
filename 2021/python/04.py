@@ -1,5 +1,4 @@
-with open("../input/04.txt") as file:
-    draws, *data = file
+from itertools import chain
 
 
 def grouped(iterable, n):
@@ -11,22 +10,35 @@ def is_winning(board, drawn):
     return any(all(number in drawn for number in line) for line in lines)
 
 
-draws = list(map(int, draws.split(",")))
+def process_data(data):
+    data_iterator = iter(data)
+    draws = list(map(int, next(data_iterator).split(",")))
 
-boards = [[*map(int, " ".join(data).split())] for data in grouped(data, 6)]
+    boards = [
+        list(map(int, chain.from_iterable(map(str.split, lines))))
+        for lines in grouped(data_iterator, 6)
+    ]
 
-drawn = set()
-win_values = []
-for draw in draws:
-    if not boards:
-        break
-    drawn.add(draw)
-    for board in boards:
-        if is_winning(board, drawn):
+    return draws, boards
+
+
+def run(input_data):
+    draws, boards = input_data
+
+    drawn = set()
+    win_values = []
+    for draw in draws:
+        drawn.add(draw)
+
+        for board in boards:
+            if not is_winning(board, drawn):
+                continue
             board_without_drawn = {*board} - drawn
             board_value = sum(board_without_drawn) * draw
             win_values.append(board_value)
             boards.remove(board)
+        if not boards:
+            break
 
-print(win_values[0])
-print(win_values[-1])
+    yield win_values[0]
+    yield win_values[-1]

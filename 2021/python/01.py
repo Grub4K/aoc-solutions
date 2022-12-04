@@ -2,7 +2,7 @@ def nwise(iterable, n):
     return (tuple(iterable[i : i + n]) for i in range(len(iterable) - n + 1))
 
 
-def process_data(data, grouplength):
+def process(data, grouplength):
     sum_of_n = list(map(sum, nwise(data, grouplength)))
 
     count = 0
@@ -13,8 +13,9 @@ def process_data(data, grouplength):
     return count
 
 
-with open("../input/01.txt") as file:
-    data = list(map(int, file))
+process_line = int
 
-print(process_data(data, 1))
-print(process_data(data, 3))
+
+def run(input_data):
+    yield process(input_data, 1)
+    yield process(input_data, 3)

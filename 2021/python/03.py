@@ -1,44 +1,42 @@
-with open("../input/03.txt") as file:
-    data = list(file)
+def filter_data(data, bit_count, is_co2=False):
+    for bit_offset in reversed(range(bit_count)):
+        ones, zeros = [], []
+        for number in data:
+            if (number >> bit_offset) & 1:
+                ones.append(number)
+            else:
+                zeros.append(number)
+
+        data = ones if (len(ones) >= len(zeros)) ^ is_co2 else zeros
+        if len(data) == 1:
+            return data[0]
+
+    assert False
 
 
-number_of_bits = len(data[0]) - 1
-number_of_items = len(data)
-threshold = number_of_items // 2
-
-counts = list(map(sum, map(lambda x: map(int, x), zip(*data))))
-
-accumulator = 0
-additor = 1 << number_of_bits
-for count in counts:
-    additor >>= 1
-    if count > threshold:
-        accumulator += additor
-
-bitmask = (1 << number_of_bits) - 1
-print(accumulator * (~accumulator & bitmask))
+def process_data(input_data):
+    return [int(line, 2) for line in input_data], len(input_data[0])
 
 
-def filter_data(data, is_co2=False):
-    predicate_one = lambda item: item[position] == "1"
-    predicate_zero = lambda item: item[position] == "0"
-    filtered_data = data.copy()
+def run(input_data):
+    data, bit_count = input_data
+    threshold = len(data) // 2
 
-    for position in range(number_of_bits):
-        count_one = sum(map(predicate_one, filtered_data))
-        count_zero = len(filtered_data) - count_one
-
-        predicate = (count_one >= count_zero) ^ is_co2
-        if predicate:
-            filtered_data = [*filter(predicate_one, filtered_data)]
+    one_counts = [
+        sum(1 for number in data if (number >> bit_offset) & 1)
+        for bit_offset in reversed(range(bit_count))
+    ]
+    gamma = epsilon = 0
+    for one_count in one_counts:
+        gamma <<= 1
+        epsilon <<= 1
+        if one_count >= threshold:
+            gamma += 1
         else:
-            filtered_data = [*filter(predicate_zero, filtered_data)]
+            epsilon += 1
 
-        if len(filtered_data) == 1:
-            break
+    yield gamma * epsilon
 
-    return int(filtered_data[0], 2)
-
-
-oxygen, co2 = filter_data(data), filter_data(data, is_co2=True)
-print(oxygen * co2)
+    oxygen = filter_data(data, bit_count)
+    co2 = filter_data(data, bit_count, is_co2=True)
+    yield oxygen * co2

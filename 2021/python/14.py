@@ -1,16 +1,13 @@
 from collections import Counter
 
 
-def read_file(path):
+def process_data(data):
     def process_rule(line):
         key, _, value = line.partition(" -> ")
         return tuple(key), value
 
-    with open(path) as file:
-        iterator = iter(map(str.rstrip, file))
-        polymer = next(iterator)
-        next(iterator)
-        rules = dict(process_rule(rule) for rule in iterator)
+    polymer = data[0]
+    rules = dict(process_rule(rule) for rule in data[2:])
 
     return polymer, rules
 
@@ -41,17 +38,18 @@ def calculate_result(transitions):
     return max(quantities) - min(quantities)
 
 
-polymer, rules = read_file("../input/14.txt")
+def run(data):
+    polymer, rules = data
 
-transitions = Counter(zip(polymer, polymer[1:]))
-# We only count the first letter of the transition pair
-# so we need to add the last letter explicitly
-transitions[(polymer[-1], "")] += 1
+    transitions = Counter(zip(polymer, polymer[1:]))
+    # We only count the first letter of the transition pair
+    # so we need to add the last letter explicitly
+    transitions[(polymer[-1], "")] += 1
 
-for _ in range(10):
-    update(transitions, rules)
-print(calculate_result(transitions))
+    for _ in range(10):
+        update(transitions, rules)
+    yield calculate_result(transitions)
 
-for _ in range(40 - 10):
-    update(transitions, rules)
-print(calculate_result(transitions))
+    for _ in range(40 - 10):
+        update(transitions, rules)
+    yield calculate_result(transitions)

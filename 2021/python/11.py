@@ -1,65 +1,61 @@
 from queue import Queue
 
-with open("../input/11.txt") as file:
-    data = [[*map(int, line.rstrip())] for line in file]
 
-y_range = range(len(data))
-x_range = range(len(data[0]))
-
-shifts = set()
-for x_shift in [-1, 0, 1]:
-    for y_shift in [-1, 0, 1]:
-        shifts.add((x_shift, y_shift))
-shifts.remove((0, 0))
+def process_line(line):
+    return list(map(int, line))
 
 
-def run_round():
-    has_flashed = set()
-    queue = Queue()
+def run(data):
+    y_range = range(len(data))
+    x_range = range(len(data[0]))
 
-    for y in y_range:
-        for x in x_range:
-            point = x, y
-            queue.put(point)
+    shifts = set()
+    for x_shift in [-1, 0, 1]:
+        for y_shift in [-1, 0, 1]:
+            shifts.add((x_shift, y_shift))
+    shifts.remove((0, 0))
 
-    while not queue.empty():
-        point = queue.get(block=False)
-        if point in has_flashed:
-            continue
+    def run_round():
+        has_flashed = set()
+        queue = Queue()
 
-        x, y = point
+        for y in y_range:
+            for x in x_range:
+                point = x, y
+                queue.put(point)
 
-        if data[y][x] == 9:
-            has_flashed.add(point)
+        while not queue.empty():
+            point = queue.get(block=False)
+            if point in has_flashed:
+                continue
 
-            # Add to the queue
-            for x_shift, y_shift in shifts:
-                x_new = x + x_shift
-                y_new = y + y_shift
-                if x_new in x_range and y_new in y_range:
-                    queue.put((x_new, y_new))
-        else:
-            data[y][x] += 1
+            x, y = point
 
-    for x, y in has_flashed:
-        data[y][x] = 0
-    return len(has_flashed)
+            if data[y][x] == 9:
+                has_flashed.add(point)
 
+                # Add to the queue
+                for x_shift, y_shift in shifts:
+                    x_new = x + x_shift
+                    y_new = y + y_shift
+                    if x_new in x_range and y_new in y_range:
+                        queue.put((x_new, y_new))
+            else:
+                data[y][x] += 1
 
-def all_flashed():
-    return sum(sum(line) for line in data) == 0
+        for x, y in has_flashed:
+            data[y][x] = 0
+        return len(has_flashed)
 
+    flashes = 0
+    all_flashed = False
+    current_round = 0
+    while current_round < 100 or not all_flashed:
+        current_round += 1
+        flashes += run_round()
 
-flashes = 0
-step = 0
-for step in range(100):
-    flashes += run_round()
-    if all_flashed():
-        found_round = step
+        if sum(sum(line) for line in data) == 0:
+            all_flashed = current_round
 
-while not all_flashed():
-    run_round()
-    step += 1
-
-print(flashes)
-print(step + 1)
+    yield flashes
+    yield all_flashed
