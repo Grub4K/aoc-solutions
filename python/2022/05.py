@@ -38,8 +38,6 @@ def work(boxes, movements, reverse=False):
         boxes[movement.to].extend(reversed(append) if reverse else append)
         del boxes[movement.from_][-movement.count :]
 
-    return boxes
-
 
 def run(data):
     base_boxes, movements = data

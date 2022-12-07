@@ -7,7 +7,6 @@ def run(input_data):
 
     found_five = False
     for number in count():
-        md5()
         data = secret + str(number).encode()
         digest = md5(data).hexdigest()
         if not found_five and digest.startswith("00000"):

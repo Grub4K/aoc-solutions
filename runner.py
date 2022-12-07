@@ -35,8 +35,11 @@ def import_file(file, name):
     return mod
 
 
-def main(year, day, test=False):
-    for day_path in base_path.glob(f"{year}/python/{day}.py"):
+def run_python(year, day, test=False):
+    python_path = base_path / "python"
+    sys.path.insert(0, str(python_path))
+
+    for day_path in python_path.glob(f"{year}/{day}.py"):
         year_path = day_path.parent.parent
         day_id = f"{year_path.stem}-{day_path.stem}"
 
@@ -61,7 +64,9 @@ def main(year, day, test=False):
             continue
 
         try:
-            input_path = year_path.joinpath("input", day_path.with_suffix(".txt").name)
+            input_path = Path(
+                "input", day_path.with_suffix(".txt").relative_to(python_path)
+            )
             if test:  # Use input files with a `#` suffixed for debugging
                 input_path = input_path.with_stem(f"{input_path.stem}#")
             input_data = input_path.read_text().splitlines(keepends=False)
@@ -75,7 +80,7 @@ def main(year, day, test=False):
                 input_data = process_data(input_data)
 
         except FileNotFoundError:
-            print_error("Error processing input file", limit=1)
+            print_error("Error locating input file", limit=1)
             continue
 
         except Exception:
@@ -86,7 +91,7 @@ def main(year, day, test=False):
             solutions = iter(module.run(input_data))
 
         except Exception:
-            print_error("run() function")
+            print_error("Error in run() function")
             continue
 
         try:
@@ -104,4 +109,4 @@ if __name__ == "__main__":
     year, _, day = data.partition("-")
     day = day.zfill(2) if day else "*"
 
-    main(year, day, test=test_mode)
+    run_python(year, day, test=test_mode)

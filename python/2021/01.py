@@ -1,5 +1,4 @@
-def nwise(iterable, n):
-    return (tuple(iterable[i : i + n]) for i in range(len(iterable) - n + 1))
+from utils import nwise
 
 
 def process(data, grouplength):
