@@ -48,7 +48,7 @@ def run_python(year, day, test=False):
             error = sys.exc_info()[1]
             assert error is not None
 
-            exception = traceback.format_exception_only(error)[-1]
+            exception = traceback.format_exception_only(error)[-1]  # type: ignore
             trimmed_summary = traceback.extract_tb(error.__traceback__, limit=limit)[
                 stacklevel:
             ]
