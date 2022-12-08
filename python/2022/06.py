@@ -9,7 +9,7 @@ def are_unique_items(sequence):
     return len(sequence) == len(set(sequence))
 
 
-def run(data: list[tuple[str, str, str, str]]):
+def run(data: list[str]):
     for size in 4, 14:
         for index, items in enumerate(nwise(data, size)):
             if are_unique_items(items):
