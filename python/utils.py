@@ -7,10 +7,7 @@ _SENTINEL = object()
 
 
 def nwise(iterable, n):
-    if n <= 1:
-        raise ValueError(f"expected n higher than one, got {n}")
-
-    elif n == 2:
+    if n == 2:
         return pairwise(iterable)
 
     iterators = tee(iterable, n)
