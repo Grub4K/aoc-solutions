@@ -1,5 +1,4 @@
 import string
-from functools import reduce
 
 LOOKUP = dict(zip(string.ascii_letters, range(1, 26 * 2 + 1)))
 
@@ -18,6 +17,6 @@ def run(data: list[str]):
 
     GROUP_SIZE = 3
     yield sum(
-        LOOKUP[reduce(set.intersection, group).pop()]
-        for group in grouped(map(set, data), GROUP_SIZE)
+        LOOKUP[set(first).intersection(*group).pop()]
+        for first, *group in grouped(data, GROUP_SIZE)
     )
