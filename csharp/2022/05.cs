@@ -11,7 +11,7 @@ public class Day05 : AoCRunner<Result>, IAoCDay
         return (Work(boxes.ToList(), movements), Work(boxes, movements, reverse: false));
     }
 
-    public static string Work(List<string> boxes, List<Movement> movements, bool reverse=true)
+    public static string Work(List<string> boxes, List<Movement> movements, bool reverse = true)
     {
         foreach (var movement in movements)
         {
