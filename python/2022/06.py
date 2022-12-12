@@ -1,4 +1,4 @@
-from utils import nwise
+from utils import first, nwise
 
 
 def process_data(data):
@@ -11,7 +11,8 @@ def are_unique_items(sequence):
 
 def run(data: list[str]):
     for size in 4, 14:
-        for index, items in enumerate(nwise(data, size)):
-            if are_unique_items(items):
-                yield index + size
-                break
+        yield first(
+            index + size
+            for index, items in enumerate(nwise(data, size))
+            if are_unique_items(items)
+        )
