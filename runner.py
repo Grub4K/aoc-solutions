@@ -2,25 +2,11 @@ import importlib.machinery
 import importlib.util
 import sys
 import traceback
+from enum import Enum
 from pathlib import Path
+from typing import Callable
 
 base_path = Path(__file__).parent
-
-
-def get_args() -> tuple[str, bool]:
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        "py-aoc-runner",
-        description="Python runner for aoc-solutions",
-    )
-    parser.add_argument("filter", help="a filter of solutions to execute")
-    parser.add_argument(
-        "--test", action="store_true", help="take input from the testfiles instead"
-    )
-
-    args = parser.parse_args()
-    return args.filter, args.test
 
 
 def import_file(file, name):
@@ -35,13 +21,19 @@ def import_file(file, name):
     return mod
 
 
-def run_python(year, day, test=False):
+def run_csharp(filter_, test=False):
+    ...
+
+
+def run_python(filter_, test=False):
+    year, _, day = filter_.partition("-")
+    day = day.zfill(2) if day else "*"
+
     python_path = base_path / "python"
     sys.path.insert(0, str(python_path))
 
     for day_path in python_path.glob(f"{year}/{day}.py"):
-        year_path = day_path.parent.parent
-        day_id = f"{year_path.stem}-{day_path.stem}"
+        day_id = f"python-{day_path.parent.stem}-{day_path.stem}"
 
         def print_error(message=None, stacklevel=0, limit=None):
             message = f"{message}: " if message else ""
@@ -104,9 +96,60 @@ def run_python(year, day, test=False):
             print_error("Error while calculating solution")
 
 
-if __name__ == "__main__":
-    data, test_mode = get_args()
-    year, _, day = data.partition("-")
-    day = day.zfill(2) if day else "*"
+class RunLanguage(Enum):
+    PYTHON = "py"
+    CSHARP = "csharp"
+    _MISSING = None
 
-    run_python(year, day, test=test_mode)
+    @classmethod
+    def _missing_(cls, value):
+        cls._MISSING._value = value
+        return cls._MISSING
+
+    def __call__(self, filter_, test=False):
+        LOOKUP = {
+            self.PYTHON: run_python,
+            self.CSHARP: run_csharp,
+        }
+        return LOOKUP[self](filter_, test)
+
+    def __str__(self):
+        return self.value
+
+    def __repr__(self):
+        return self._value if self is self._MISSING else self.value
+
+
+def get_args() -> tuple[str, bool, Callable[[str, bool], None]]:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        "aoc-runner",
+        description="Generic runner for aoc-solutions",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "filter", metavar="<filter>", help="a filter of solutions to execute"
+    )
+    parser.add_argument(
+        "-t",
+        "--test",
+        action="store_true",
+        help="use input from the test file instead",
+    )
+    parser.add_argument(
+        "-l",
+        "--language",
+        type=RunLanguage,
+        choices=set(RunLanguage) ^ {RunLanguage._MISSING},
+        default="py",
+        help="the language to run the selection in",
+    )
+
+    args = parser.parse_args()
+    return args.filter, args.test, args.language
+
+
+if __name__ == "__main__":
+    filter_, test_mode, run_function = get_args()
+    run_function(filter_, test_mode)
