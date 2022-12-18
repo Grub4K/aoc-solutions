@@ -1,23 +1,8 @@
 from functools import reduce
 
-THROWAWAY_POINT = -1, -1
+from utils import LETTER_COUNT, LETTER_HEIGHT, LETTER_WIDTH, convert_letters, range2d
 
-LETTER_WIDTH = 4
-LETTER_HEIGHT = 6
-LETTER_COUNT = 8
-# Flattened letter lookup for the decoding.
-# INCOMPLETE! will output code if not found.
-LETTER_LOOKUP = {
-    0x699F99: "A",
-    0x698896: "C",
-    0xF8E888: "F",
-    0x9ACAA9: "K",
-    0x88888F: "L",
-    0xE99E88: "P",
-    0xE99EA9: "R",
-    0x999996: "U",
-    0xF1248F: "Z",
-}
+THROWAWAY_POINT = -1, -1
 
 
 def make_fold(cont, instruction):
@@ -71,21 +56,7 @@ def run(data):
     points = set(map(lambda point: fold_func(*point), points))
     points.discard(THROWAWAY_POINT)
 
-    result_width = LETTER_COUNT * (LETTER_WIDTH + 1)
-    board = [["0" for _ in range(result_width)] for _ in range(LETTER_HEIGHT)]
-    for x, y in points:
-        board[y][x] = "1"
-
-    result = ""
-    for x in range(0, result_width, LETTER_WIDTH + 1):
-        letter_code = int(
-            "".join(
-                c for y in range(LETTER_HEIGHT) for c in board[y][x : x + LETTER_WIDTH]
-            ),
-            base=2,
-        )
-        letter = LETTER_LOOKUP.get(letter_code)
-        # If we cannot automatically decode the output, print the packed hex value
-        result += letter if letter else f"({letter_code:X})"
-
-    yield result
+    yield convert_letters(
+        point in points
+        for point in range2d((LETTER_WIDTH + 1) * LETTER_COUNT, LETTER_HEIGHT)
+    )
