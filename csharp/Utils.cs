@@ -32,8 +32,9 @@ public static class Extensions
     public static string ToPrettyString<T>(this IEnumerable<T> enumerable) =>
         $$"""IEnumerable<{{typeof(T).Name}}> { {{string.Join(", ", enumerable)}} }""";
 
-    public static Dictionary<A, B> ToDictionary<A, B>(this IEnumerable<(A, B)> enumerable)
-        where A : notnull => enumerable.ToDictionary(x => x.Item1, x => x.Item2);
+    public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(
+        this IEnumerable<(TKey, TValue)> enumerable
+    ) where TKey : notnull => enumerable.ToDictionary(x => x.Item1, x => x.Item2);
 }
 
 public class RangeEnumerator

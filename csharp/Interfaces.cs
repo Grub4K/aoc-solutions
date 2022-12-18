@@ -5,7 +5,7 @@ public interface IAoCDay
     public (string?, string?) Run(string data);
 }
 
-public abstract class AoCRunner<T>
+public abstract class AoCRunner<TData>
 {
     public AoCRunner() { }
 
@@ -15,7 +15,7 @@ public abstract class AoCRunner<T>
         return (value.Item1?.ToString(), value.Item2?.ToString());
     }
 
-    public abstract (object?, object?) Run(T data);
+    public abstract (object?, object?) Run(TData data);
 
     public IEnumerable<string> Read(string path)
     {
@@ -27,7 +27,7 @@ public abstract class AoCRunner<T>
             yield return line;
     }
 
-    public abstract T Process(IEnumerable<string> data);
+    public abstract TData Process(IEnumerable<string> data);
 }
 
 public abstract class AoCRunner : AoCRunner<IEnumerable<string>>
