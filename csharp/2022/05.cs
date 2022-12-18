@@ -1,10 +1,10 @@
 namespace AoCSolutions.Year2022;
-using Result = ValueTuple<List<string>, List<Movement>>;
-
-public record struct Movement(byte Count, byte From, byte To);
+using Result = ValueTuple<List<string>, List<Day05.Movement>>;
 
 public class Day05 : AoCRunner<Result>, IAoCDay
 {
+    public record struct Movement(byte Count, byte From, byte To);
+
     public override (object?, object?) Run(Result data)
     {
         var (boxes, movements) = data;
