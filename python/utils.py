@@ -197,10 +197,21 @@ class Vector:
         return iter(self._values)
 
     def __repr__(self, /):
-        return f"Vector(x={self.x}, y={self.y})"
+        return f"{type(self).__name__}(x={self.x}, y={self.y})"
 
     def __hash__(self, /):
         return self._values.__hash__()
+
+
+class VectorF(Vector):
+    def __str__(self, /):
+        return f"<{self.x:f}|{self.y:f}>"
+
+    def __iter__(self, /):
+        return iter(self._values)
+
+    def __repr__(self, /):
+        return f"{type(self).__name__}(x={self.x:f}, y={self.y:f})"
 
 
 class Direction(Enum):
@@ -220,7 +231,7 @@ CARDINAL_DIRECTIONS = (Direction.UP, Direction.DOWN, Direction.LEFT, Direction.R
 def range2d(width, height):
     for y in range(height):
         for x in range(width):
-            yield Vector(x, y)
+            yield x, y
 
 
 def make_direction_range(height, width, offset):
@@ -240,3 +251,40 @@ def make_direction_range(height, width, offset):
 
 def make_direction_ranges(height, width, *directions):
     return tuple(make_direction_range(height, width, offset) for offset in directions)
+
+
+LETTER_LOOKUP = {
+    0x699F99: "A",
+    0xE9E99E: "B",
+    0x698896: "C",
+    0xF8E888: "F",
+    0x698B97: "G",
+    0x9ACAA9: "K",
+    0x88888F: "L",
+    0xE99E88: "P",
+    0xE99EA9: "R",
+    0x999996: "U",
+    0xF1248F: "Z",
+}
+
+LETTER_WIDTH = 4
+LETTER_HEIGHT = 6
+LETTER_COUNT = 8
+
+
+def convert_letters(board):
+    char_codes = [0] * LETTER_COUNT
+
+    iterator = iter(board)
+    for _ in range(LETTER_HEIGHT):
+        for index in range(LETTER_COUNT):
+            for _ in range(LETTER_WIDTH):
+                char_codes[index] <<= 1
+                if next(iterator):
+                    char_codes[index] |= 1
+            # Skip one char of padding
+            next(iterator)
+
+    return "".join(
+        LETTER_LOOKUP.get(char_code) or f"({char_code})" for char_code in char_codes
+    )

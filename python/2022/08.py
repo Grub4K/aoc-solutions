@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from utils import CARDINAL_DIRECTIONS, make_direction_ranges, range2d
+from utils import CARDINAL_DIRECTIONS, Vector, make_direction_ranges, range2d
 
 
 def process_line(line):
@@ -29,6 +29,7 @@ def run(data: list[list[int]]):
         return Result(scenic_score, visible)
 
     def process_tree(position):
+        position = Vector(position)
         tree = data[position.y][position.x]
 
         visible = False
