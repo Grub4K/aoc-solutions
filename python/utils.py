@@ -286,5 +286,5 @@ def convert_letters(board):
             next(iterator)
 
     return "".join(
-        LETTER_LOOKUP.get(char_code) or f"({char_code})" for char_code in char_codes
+        LETTER_LOOKUP.get(char_code, f"(0x{char_code:X})") for char_code in char_codes
     )
