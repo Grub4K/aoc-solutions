@@ -86,15 +86,14 @@ class Monkey:
         self._state.reset()
 
 
-def calculate(monkeys: list[Monkey], rounds: int, result_callback):
+def calculate(monkeys: list[Monkey], rounds: int, modulus: int, divisor=1):
     for monkey in monkeys:
         monkey.reset()
 
     for _ in range(rounds):
         for monkey in monkeys:
             while monkey.items:
-                item = result_callback(monkey.inspect())
-
+                item = monkey.inspect() % modulus // divisor
                 destination = monkey.get_destination(item)
                 monkeys[destination].items.append(item)
 
@@ -102,11 +101,10 @@ def calculate(monkeys: list[Monkey], rounds: int, result_callback):
 
 
 def run(monkeys: list[Monkey]):
-    yield calculate(monkeys, 20, lambda x: x // 3)
-
     # Assumption: The mod check is always prime
-    divisor = 1
+    modulus = 1
     for monkey in monkeys:
-        divisor *= monkey.check
+        modulus *= monkey.check
 
-    yield calculate(monkeys, 10_000, lambda x: x % divisor)
+    yield calculate(monkeys, 20, modulus, divisor=3)
+    yield calculate(monkeys, 10_000, modulus)
