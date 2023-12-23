@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 from itertools import count
 
-from utils import flatten, nwise
+from utils import flatten
+from utils import nwise
 
 
 def parse_point(point):

@@ -3,9 +3,14 @@ from __future__ import annotations
 import sys
 import traceback
 
-from aoc.run import RunInfo, Error, BASE_PATH, import_file
+from aoc.run import BASE_PATH
+from aoc.run import Error
+from aoc.run import RunInfo
+from aoc.run import import_file
 
-sys.path.insert(0, str(BASE_PATH/"python"))
+
+sys.path.insert(0, str(BASE_PATH / "python"))
+
 
 def get_error(message: str = ""):
     if message:

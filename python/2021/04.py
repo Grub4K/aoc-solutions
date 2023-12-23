@@ -1,4 +1,7 @@
-from utils import flatten, grouped
+from __future__ import annotations
+
+from utils import flatten
+from utils import grouped
 
 
 def is_winning(board, drawn):
@@ -10,10 +13,7 @@ def process_data(data):
     data_iterator = iter(data)
     draws = list(map(int, next(data_iterator).split(",")))
 
-    boards = [
-        list(map(int, flatten(map(str.split, lines))))
-        for lines in grouped(data_iterator, 6)
-    ]
+    boards = [list(map(int, flatten(map(str.split, lines)))) for lines in grouped(data_iterator, 6)]
 
     return draws, boards
 

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 def filter_data(data, bit_count, is_co2=False):
     for bit_offset in reversed(range(bit_count)):
         ones, zeros = [], []

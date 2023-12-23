@@ -1,6 +1,11 @@
+from __future__ import annotations
+
 import math
 
-from utils import Direction, Vector, flatten
+from utils import Direction
+from utils import Vector
+from utils import flatten
+
 
 LOOKUP = {
     "R": Direction.RIGHT,

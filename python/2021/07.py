@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 def process_data(lines):
     return [*map(int, lines[0].split(","))]
 

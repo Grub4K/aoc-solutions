@@ -1,9 +1,16 @@
+from __future__ import annotations
+
 import operator
 import re
+import typing
+
 from collections import deque
-from collections.abc import Callable
 from dataclasses import dataclass
 from heapq import nlargest
+
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable
 
 MONKEY_INFO_REGEX = re.compile(
     r"""Monkey \d+:

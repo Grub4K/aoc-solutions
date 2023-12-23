@@ -1,6 +1,12 @@
-from collections import deque, namedtuple
+from __future__ import annotations
 
-from utils import CARDINAL_DIRECTIONS, Vector, range2d
+from collections import deque
+from collections import namedtuple
+
+from utils import CARDINAL_DIRECTIONS
+from utils import Vector
+from utils import range2d
+
 
 Node = namedtuple("Node", ["position", "height", "distance"])
 

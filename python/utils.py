@@ -1,7 +1,13 @@
+from __future__ import annotations
+
 import math
+
 from enum import Enum
 from functools import cached_property
-from itertools import chain, pairwise, tee
+from itertools import chain
+from itertools import pairwise
+from itertools import tee
+
 
 _SENTINEL = object()
 
@@ -86,7 +92,7 @@ class Vector:
         if isinstance(other, Vector):
             return self.__class__(self.x + other.x, self.y + other.y)
 
-        elif isinstance(other, int | float):
+        if isinstance(other, int | float):
             return self.__class__(self.x + other, self.y + other)
 
         return NotImplemented
@@ -98,7 +104,7 @@ class Vector:
         if isinstance(other, Vector):
             return self.__class__(self.x - other.x, self.y - other.y)
 
-        elif isinstance(other, int | float):
+        if isinstance(other, int | float):
             return self.__class__(self.x - other, self.y - other)
 
         return NotImplemented
@@ -110,10 +116,10 @@ class Vector:
         if isinstance(other, int | float):
             return self.x < other > self.y
 
-        elif isinstance(other, Vector):
+        if isinstance(other, Vector):
             return self.x < other.x and self.y < other.y
 
-        elif isinstance(other, tuple):
+        if isinstance(other, tuple):
             if len(other) != 2:
                 return NotImplemented
             return self.x < other[0] and self.y < other[1]
@@ -124,10 +130,10 @@ class Vector:
         if isinstance(other, int | float):
             return self.x <= other >= self.y
 
-        elif isinstance(other, Vector):
+        if isinstance(other, Vector):
             return self.x <= other.x and self.y <= other.y
 
-        elif isinstance(other, tuple):
+        if isinstance(other, tuple):
             if len(other) != 2:
                 return NotImplemented
             return self.x <= other[0] and self.y <= other[1]
@@ -138,10 +144,10 @@ class Vector:
         if isinstance(other, int | float):
             return self.x == other == self.y
 
-        elif isinstance(other, Vector):
+        if isinstance(other, Vector):
             return self.x == other.x and self.y == other.y
 
-        elif isinstance(other, tuple):
+        if isinstance(other, tuple):
             if len(other) != 2:
                 return NotImplemented
             return self.x == other[0] and self.y == other[1]
@@ -152,10 +158,10 @@ class Vector:
         if isinstance(other, int | float):
             return self.x != other != self.y
 
-        elif isinstance(other, Vector):
+        if isinstance(other, Vector):
             return self.x != other.x and self.y != other.y
 
-        elif isinstance(other, tuple):
+        if isinstance(other, tuple):
             if len(other) != 2:
                 return NotImplemented
             return self.x != other[0] and self.y != other[1]
@@ -166,10 +172,10 @@ class Vector:
         if isinstance(other, int | float):
             return self.x >= other <= self.y
 
-        elif isinstance(other, Vector):
+        if isinstance(other, Vector):
             return self.x >= other.x and self.y >= other.y
 
-        elif isinstance(other, tuple):
+        if isinstance(other, tuple):
             if len(other) != 2:
                 return NotImplemented
             return self.x >= other[0] and self.y >= other[1]
@@ -180,10 +186,10 @@ class Vector:
         if isinstance(other, int | float):
             return self.x > other < self.y
 
-        elif isinstance(other, Vector):
+        if isinstance(other, Vector):
             return self.x > other.x and self.y > other.y
 
-        elif isinstance(other, tuple):
+        if isinstance(other, tuple):
             if len(other) != 2:
                 return NotImplemented
             return self.x > other[0] and self.y > other[1]
@@ -285,6 +291,4 @@ def convert_letters(board):
             # Skip one char of padding
             next(iterator)
 
-    return "".join(
-        LETTER_LOOKUP.get(char_code, f"(0x{char_code:X})") for char_code in char_codes
-    )
+    return "".join(LETTER_LOOKUP.get(char_code, f"(0x{char_code:X})") for char_code in char_codes)

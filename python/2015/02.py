@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 def process_line(line):
     a, b, c = line.split("x")
     return int(a), int(b), int(c)

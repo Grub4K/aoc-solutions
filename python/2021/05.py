@@ -1,4 +1,7 @@
-from collections import Counter, namedtuple
+from __future__ import annotations
+
+from collections import Counter
+from collections import namedtuple
 from itertools import cycle
 
 

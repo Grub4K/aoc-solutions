@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 def run(input_data):
     basement_position = accum = 0
     for position, char in enumerate(input_data, 1):

@@ -22,12 +22,15 @@ class RunInfo:
     def id(self):  # noqa: A003
         return f"{self.name}-{self.year}-{self.day}"
 
+
 @dataclass
 class Error:
     message: str
 
+
 def relative(path: Path):
     return path.relative_to(BASE_PATH).as_posix()
+
 
 def import_file(file: Path, name: str | None = None):
     if not name:
@@ -69,7 +72,10 @@ def _resolve(name: str, pattern: str, test: bool):
             yield year, day, input_path, parts
             continue
 
-        print(f"{name}-{year}-{day}: ERROR: missing input file: {relative(input_path)}", file=sys.stderr)
+        print(
+            f"{name}-{year}-{day}: ERROR: missing input file: {relative(input_path)}",
+            file=sys.stderr,
+        )
 
 
 def execute_runner(name: str, patterns: list[str], test: bool):
@@ -94,7 +100,7 @@ def execute_runner(name: str, patterns: list[str], test: bool):
             if result is None:
                 continue
 
-            elif isinstance(result, Error):
+            if isinstance(result, Error):
                 error = "No result" if result is None else result.message
                 print(f"{run.id}-{part}: ERROR: {error}", file=sys.stderr)
 

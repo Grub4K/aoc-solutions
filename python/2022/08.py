@@ -1,6 +1,11 @@
+from __future__ import annotations
+
 from collections import namedtuple
 
-from utils import CARDINAL_DIRECTIONS, Vector, make_direction_ranges, range2d
+from utils import CARDINAL_DIRECTIONS
+from utils import Vector
+from utils import make_direction_ranges
+from utils import range2d
 
 
 def process_line(line):

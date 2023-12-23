@@ -1,8 +1,14 @@
+from __future__ import annotations
+
 import re
+
 from functools import cmp_to_key
 from itertools import zip_longest
 
-from utils import first, flatten, grouped
+from utils import first
+from utils import flatten
+from utils import grouped
+
 
 NUMBER_PATTERN = re.compile(r"\d+")
 
@@ -61,11 +67,9 @@ def deep_compare(a, b) -> int:
 
 def run(data):
     yield sum(
-        index
-        for index, (first, second) in enumerate(data, 1)
-        if deep_compare(first, second) < 0
+        index for index, (first, second) in enumerate(data, 1) if deep_compare(first, second) < 0
     )
 
     a, b = [[2]], [[6]]
-    sorted_data = sorted(flatten(data + [(a, b)]), key=cmp_to_key(deep_compare))
+    sorted_data = sorted(flatten([*data, (a, b)]), key=cmp_to_key(deep_compare))
     yield (sorted_data.index(a) + 1) * (sorted_data.index(b) + 1)

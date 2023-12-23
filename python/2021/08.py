@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+from functools import partial
+
+
 UNIQUE_LENGTHS = [
     (1, 2),
     (4, 4),
@@ -32,15 +37,13 @@ def filter_length(probes, length):
 
 def find_numbers(data):
     for probes, outputs in data:
-        filter_func = lambda length: filter_length(probes, length)
+        filter_func = partial(filter_length, probes)
         trans = {}
         for value, segments in UNIQUE_LENGTHS:
             trans[value] = filter_func(segments).pop()
         trans[2], trans[3], trans[5] = solve_five_segments(filter_func(5), trans)
         trans[0], trans[6], trans[9] = solve_six_segments(filter_func(6), trans)
-        translation = {
-            frozenset(lookup): str(number) for number, lookup in trans.items()
-        }
+        translation = {frozenset(lookup): str(number) for number, lookup in trans.items()}
 
         yield int("".join(translation[output] for output in outputs))
 

@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from collections import namedtuple
 
-from utils import convert_letters, flatten
+from utils import convert_letters
+from utils import flatten
+
 
 Instruction = namedtuple("Instruction", ["cycles", "amount"])
 

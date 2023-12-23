@@ -1,5 +1,10 @@
 from enum import Enum
-from typing import Callable, Iterable, Iterator, Literal, TypeVar, overload
+from typing import Callable
+from typing import Iterable
+from typing import Iterator
+from typing import Literal
+from typing import TypeVar
+from typing import overload
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -15,9 +20,7 @@ def nwise(iterable: Iterable[T], n: Literal[4]) -> Iterable[tuple[T, T, T, T]]: 
 @overload
 def nwise(iterable: Iterable[T], n: Literal[5]) -> Iterable[tuple[T, T, T, T, T]]: ...
 @overload
-def nwise(
-    iterable: Iterable[T], n: Literal[6]
-) -> Iterable[tuple[T, T, T, T, T, T]]: ...
+def nwise(iterable: Iterable[T], n: Literal[6]) -> Iterable[tuple[T, T, T, T, T, T]]: ...
 @overload
 def nwise(iterable: Iterable[T], n: int) -> Iterable[tuple[T, ...]]: ...
 @overload
@@ -33,9 +36,7 @@ def grouped(iterable: Iterable[T], n: Literal[4]) -> Iterable[tuple[T, T, T, T]]
 @overload
 def grouped(iterable: Iterable[T], n: Literal[5]) -> Iterable[tuple[T, T, T, T, T]]: ...
 @overload
-def grouped(
-    iterable: Iterable[T], n: Literal[6]
-) -> Iterable[tuple[T, T, T, T, T, T]]: ...
+def grouped(iterable: Iterable[T], n: Literal[6]) -> Iterable[tuple[T, T, T, T, T, T]]: ...
 @overload
 def grouped(iterable: Iterable[T], n: int) -> Iterable[tuple[T]]: ...
 def flatten(iterable: Iterable[Iterable[T]]) -> Iterable[T]: ...

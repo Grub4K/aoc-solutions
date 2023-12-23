@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 from collections import defaultdict
 from heapq import nsmallest
 from pathlib import PurePosixPath as Path
+
 
 HOME_PATH = Path("/")
 NEEDED_SPACE = 30_000_000
@@ -22,7 +25,7 @@ def process_data(data: list[str]) -> defaultdict[Path, list[Path | int]]:
                 current_dir /= directory
             continue
 
-        elif line.startswith("$"):
+        if line.startswith("$"):
             continue
 
         size, _, name = line.partition(" ")

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 def process_line(line):
     command, _, count = line.partition(" ")
     count = int(count)

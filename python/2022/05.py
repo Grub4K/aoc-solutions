@@ -1,4 +1,8 @@
-from collections import defaultdict, namedtuple
+from __future__ import annotations
+
+from collections import defaultdict
+from collections import namedtuple
+
 
 Movement = namedtuple("Movement", ["count", "from_", "to"])
 
