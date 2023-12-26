@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+import textwrap
 
 from dataclasses import dataclass
 from pathlib import Path
@@ -26,25 +27,31 @@ class RunInfo:
 @dataclass
 class Error:
     message: str
+    traceback: str | None = None
+
+    def __str__(self):
+        if self.traceback:
+            trace = textwrap.indent(self.traceback, "    ")
+            return f"{self.message}\n{trace}"
+
+        return self.message
 
 
 def relative(path: Path):
     return path.relative_to(BASE_PATH).as_posix()
 
 
-def import_file(file: Path, name: str | None = None):
-    if not name:
-        name = file.stem
-
+def import_file(file: Path, name: str):
     spec = importlib.util.spec_from_file_location(name, file)
 
     if not spec or not spec.loader:
         raise ImportError(f"Could not import {relative(file)}")
 
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
 
-    return mod
+    return module
 
 
 def _resolve(name: str, pattern: str, test: bool):
@@ -68,19 +75,10 @@ def _resolve(name: str, pattern: str, test: bool):
 
         suffix = "#" if test else ""
         input_path = BASE_PATH / f"input/{year}/{day}{suffix}.txt"
-        if input_path.is_file():
-            yield year, day, input_path, parts
-            continue
-
-        print(
-            f"{name}-{year}-{day}: ERROR: missing input file: {relative(input_path)}",
-            file=sys.stderr,
-        )
+        yield year, day, input_path, parts
 
 
-def execute_runner(name: str, patterns: list[str], test: bool):
-    runner = import_file(BASE_PATH / f"{name}/runner.py")
-
+def generate_runs(name: str, patterns: list[str], test: bool):
     runs: dict[tuple[str, str, Path], RunInfo] = {}
     for pattern in patterns:
         for year, day, input_path, parts in _resolve(name, pattern, test):
@@ -90,10 +88,25 @@ def execute_runner(name: str, patterns: list[str], test: bool):
             else:
                 runs[key] = RunInfo(name, year, day, input_path, parts)
 
-    run_list = [run for _, run in sorted(runs.items())]
-    for run, result in zip(run_list, runner.run(run_list), strict=True):
+    for _, run in sorted(runs.items()):
+        if run.input.is_file():
+            yield run
+        else:
+            print(
+                f"{run.id}: ERROR: missing input: {relative(run.input)}",
+                file=sys.stderr,
+            )
+
+
+def execute_runs(runner, runs: list[RunInfo]):
+    if callable(getattr(runner, "run_single", None)):
+        results = map(runner.run_single, runs)
+    else:
+        results = runner.run(runs)
+
+    for run, result in zip(runs, results, strict=True):
         if isinstance(result, Error):
-            print(f"{run.id}: ERROR: {result.message}", file=sys.stderr)
+            print(f"{run.id}: ERROR: {result}", file=sys.stderr)
             continue
 
         for part, result in zip("12", result, strict=True):
@@ -101,15 +114,16 @@ def execute_runner(name: str, patterns: list[str], test: bool):
                 continue
 
             if isinstance(result, Error):
-                error = "No result" if result is None else result.message
-                print(f"{run.id}-{part}: ERROR: {error}", file=sys.stderr)
+                print(f"{run.id}-{part}: ERROR: {result}", file=sys.stderr)
 
             else:
                 print(f"{run.id}-{part}: {result}")
 
 
-def get_runners():
-    return sorted(path.parent.name for path in BASE_PATH.glob("*/runner.py"))
+def execute(name: str, patterns: list[str], test: bool):
+    runner = import_file(BASE_PATH / f"{name}/runner.py", f"aoc.{name}.runner")
+    runs = generate_runs(name, patterns, test)
+    execute_runs(runner, list(runs))
 
 
-RUNNERS = get_runners()
+RUNNERS = sorted(path.parent.name for path in BASE_PATH.glob("*/runner.py"))

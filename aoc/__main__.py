@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from aoc.run import RUNNERS
-from aoc.run import execute_runner
+from aoc.run import execute
 
 
 def get_args() -> tuple[str, list[str], bool]:
@@ -35,7 +35,7 @@ def get_args() -> tuple[str, list[str], bool]:
 
 def main():
     try:
-        execute_runner(*get_args())
+        execute(*get_args())
     except KeyboardInterrupt:
         pass
 

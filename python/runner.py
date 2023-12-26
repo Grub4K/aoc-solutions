@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+import textwrap
 import traceback
 
 from aoc.run import BASE_PATH
@@ -12,7 +13,7 @@ from aoc.run import import_file
 sys.path.insert(0, str(BASE_PATH / "python"))
 
 
-def get_error(message: str = ""):
+def get_error(message: str = "", stacklevel: int = 0):
     if message:
         message = f"{message}: "
 
@@ -20,45 +21,46 @@ def get_error(message: str = ""):
     assert error is not None
 
     exception = traceback.format_exception_only(None, error)[-1].rstrip()
-    return Error(f"{message}{exception}")
+    summary = traceback.extract_tb(error.__traceback__)
+    if stacklevel:
+        summary = traceback.StackSummary.from_list(summary[stacklevel:])
+    trace = textwrap.dedent("".join(summary.format()))
+
+    return Error(f"{message}{exception}", trace)
 
 
-def run(runs: list[RunInfo]):
-    for run in runs:
-        run_path = BASE_PATH.joinpath("python", run.year, f"{run.day}.py")
+def run_single(run_info: RunInfo):
+    run_path = BASE_PATH.joinpath("python", run_info.year, f"{run_info.day}.py")
 
-        try:
-            module = import_file(run_path, f"{run.year}.{run.day}")
-        except Exception:
-            yield get_error("Could not import file")
-            continue
+    try:
+        module = import_file(run_path, f"aoc.python.{run_info.year}.{run_info.day}")
+    except Exception:
+        return get_error("Could not import file", 4)
 
-        input_data = run.input.read_text().splitlines(keepends=False)
+    input_data = run_info.input.read_text().splitlines(keepends=False)
 
-        try:
-            process_line = getattr(module, "process_line", None)
-            if process_line:
-                input_data = [process_line(line) for line in input_data]
+    try:
+        process_line = getattr(module, "process_line", None)
+        if process_line:
+            input_data = [process_line(line) for line in input_data]
 
-            process_data = getattr(module, "process_data", None)
-            if process_data:
-                input_data = process_data(input_data)
+        process_data = getattr(module, "process_data", None)
+        if process_data:
+            input_data = process_data(input_data)
 
-        except Exception:
-            yield get_error("Error processing input file")
-            continue
+    except Exception:
+        return get_error("Error processing input file")
 
-        try:
-            solutions = iter(module.run(input_data))
-        except Exception:
-            yield get_error("Error in run() function")
-            continue
+    try:
+        solutions = iter(module.run(input_data))
+    except Exception:
+        return get_error("run() function needs to be a generator")
 
-        try:
-            first = next(solutions, None)
-            yield (
-                first if run.parts & 0b01 else None,
-                next(solutions, None) if run.parts & 0b10 else None,
-            )
-        except Exception:
-            yield get_error("Error while calculating solution")
+    try:
+        first = next(solutions, None)
+        return (
+            first if run_info.parts & 0b01 else None,
+            next(solutions, None) if run_info.parts & 0b10 else None,
+        )
+    except Exception:
+        return get_error("Error while calculating solution")
