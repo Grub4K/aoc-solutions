@@ -13,12 +13,9 @@ from aoc.run import import_file
 sys.path.insert(0, str(BASE_PATH / "python"))
 
 
-def get_error(message: str = "", stacklevel: int = 0):
+def get_error(error: Exception, message: str = "", stacklevel: int = 0):
     if message:
         message = f"{message}: "
-
-    error = sys.exc_info()[1]
-    assert error is not None
 
     exception = traceback.format_exception_only(None, error)[-1].rstrip()
     summary = traceback.extract_tb(error.__traceback__)
@@ -34,8 +31,8 @@ def run_single(run_info: RunInfo):
 
     try:
         module = import_file(run_path, f"aoc.python.{run_info.year}.{run_info.day}")
-    except Exception:
-        return get_error("Could not import file", 4)
+    except Exception as error:
+        return get_error(error, "Could not import file", 4)
 
     input_data = run_info.input.read_text().splitlines(keepends=False)
 
@@ -48,13 +45,13 @@ def run_single(run_info: RunInfo):
         if process_data:
             input_data = process_data(input_data)
 
-    except Exception:
-        return get_error("Error processing input file")
+    except Exception as error:
+        return get_error(error, "Error processing input file")
 
     try:
         solutions = iter(module.run(input_data))
-    except Exception:
-        return get_error("run() function needs to be a generator")
+    except Exception as error:
+        return get_error(error, "run() function needs to be a generator")
 
     try:
         first = next(solutions, None)
@@ -62,5 +59,5 @@ def run_single(run_info: RunInfo):
             first if run_info.parts & 0b01 else None,
             next(solutions, None) if run_info.parts & 0b10 else None,
         )
-    except Exception:
-        return get_error("Error while calculating solution")
+    except Exception as error:
+        return get_error(error, "Error while calculating solution")
