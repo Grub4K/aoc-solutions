@@ -149,10 +149,10 @@ class Vector:
 
         if isinstance(other, tuple):
             if len(other) != 2:
-                return NotImplemented
+                return False
             return self.x == other[0] and self.y == other[1]
 
-        return NotImplemented
+        return False
 
     def __ne__(self, other, /):
         if isinstance(other, int | float):
@@ -163,10 +163,10 @@ class Vector:
 
         if isinstance(other, tuple):
             if len(other) != 2:
-                return NotImplemented
+                return False
             return self.x != other[0] and self.y != other[1]
 
-        return NotImplemented
+        return False
 
     def __ge__(self, other, /):
         if isinstance(other, int | float):
@@ -212,9 +212,6 @@ class Vector:
 class VectorF(Vector):
     def __str__(self, /):
         return f"<{self.x:f}|{self.y:f}>"
-
-    def __iter__(self, /):
-        return iter(self._values)
 
     def __repr__(self, /):
         return f"{type(self).__name__}(x={self.x:f}, y={self.y:f})"
