@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from functools import partial
 
-
 UNIQUE_LENGTHS = [
     (1, 2),
     (4, 4),

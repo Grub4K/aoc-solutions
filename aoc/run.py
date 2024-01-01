@@ -3,10 +3,8 @@ from __future__ import annotations
 import importlib.util
 import sys
 import textwrap
-
 from dataclasses import dataclass
 from pathlib import Path
-
 
 BASE_PATH = Path(__file__, "../..").resolve()
 

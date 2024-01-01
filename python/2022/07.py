@@ -4,7 +4,6 @@ from collections import defaultdict
 from heapq import nsmallest
 from pathlib import PurePosixPath as Path
 
-
 HOME_PATH = Path("/")
 NEEDED_SPACE = 30_000_000
 AVAILABLE_SPACE = 70_000_000

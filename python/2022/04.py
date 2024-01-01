@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections import namedtuple
 
-
 Range = namedtuple("Range", ["start", "stop"])
 
 

@@ -1,13 +1,11 @@
 from __future__ import annotations
 
 import math
-
 from enum import Enum
 from functools import cached_property
 from itertools import chain
 from itertools import pairwise
 from itertools import tee
-
 
 _SENTINEL = object()
 

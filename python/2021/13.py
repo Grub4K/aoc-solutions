@@ -9,7 +9,6 @@ from utils import LETTER_WIDTH
 from utils import convert_letters
 from utils import range2d
 
-
 THROWAWAY_POINT = -1, -1
 
 

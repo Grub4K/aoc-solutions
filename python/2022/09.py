@@ -6,7 +6,6 @@ from utils import Direction
 from utils import Vector
 from utils import flatten
 
-
 LOOKUP = {
     "R": Direction.RIGHT,
     "U": Direction.UP,

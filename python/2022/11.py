@@ -3,11 +3,9 @@ from __future__ import annotations
 import operator
 import re
 import typing
-
 from collections import deque
 from dataclasses import dataclass
 from heapq import nlargest
-
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable

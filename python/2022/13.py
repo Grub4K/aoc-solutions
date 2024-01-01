@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import re
-
 from functools import cmp_to_key
 from itertools import zip_longest
 
 from utils import first
 from utils import flatten
 from utils import grouped
-
 
 NUMBER_PATTERN = re.compile(r"\d+")
 

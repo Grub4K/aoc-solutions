@@ -9,7 +9,6 @@ from aoc.run import Error
 from aoc.run import RunInfo
 from aoc.run import import_file
 
-
 sys.path.insert(0, str(BASE_PATH / "python"))
 
 

@@ -7,7 +7,6 @@ from utils import CARDINAL_DIRECTIONS
 from utils import Vector
 from utils import range2d
 
-
 Node = namedtuple("Node", ["position", "height", "distance"])
 
 

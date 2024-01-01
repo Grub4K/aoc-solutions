@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import string
 
-
 LOOKUP = dict(zip(string.ascii_letters, range(1, 26 * 2 + 1)))
 
 

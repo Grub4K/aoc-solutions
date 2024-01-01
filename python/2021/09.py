@@ -3,7 +3,6 @@ from __future__ import annotations
 from heapq import nlargest
 from queue import Queue
 
-
 SHIFTS = [
     (-1, 0),
     (1, 0),

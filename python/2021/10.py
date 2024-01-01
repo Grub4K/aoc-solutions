@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from queue import LifoQueue
 
-
 SYNTAX_VALUES = {
     ")": 3,
     "]": 57,
