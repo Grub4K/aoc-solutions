@@ -107,8 +107,8 @@ def execute_runs(runner, runs: list[RunInfo]):
             print(f"{run.id}: ERROR: {result}", file=sys.stderr)
             continue
 
-        for part, result in zip("12", result, strict=True):
-            if result is None:
+        for part, result in zip([1, 2], result, strict=True):
+            if not run.parts & part or result is None:
                 continue
 
             if isinstance(result, Error):

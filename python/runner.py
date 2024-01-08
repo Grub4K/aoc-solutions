@@ -53,10 +53,6 @@ def run_single(run_info: RunInfo):
         return get_error(error, "run() function needs to be a generator")
 
     try:
-        first = next(solutions, None)
-        return (
-            first if run_info.parts & 0b01 else None,
-            next(solutions, None) if run_info.parts & 0b10 else None,
-        )
+        return (next(solutions, None), next(solutions, None) if run_info.parts & 0b10 else None)
     except Exception as error:
         return get_error(error, "Error while calculating solution")
