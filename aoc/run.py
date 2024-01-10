@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import importlib.util
+import re
 import sys
 import textwrap
 from dataclasses import dataclass
 from pathlib import Path
 
 BASE_PATH = Path(__file__, "../..").resolve()
+NUMBER_RE = re.compile(r"\d+")
 
 
 @dataclass
@@ -56,8 +58,7 @@ def _resolve(name: str, pattern: str, test: bool):
     year, _, day = pattern.partition("-")
     day, _, part = day.partition("-")
 
-    year = year or "*"
-    day = day.zfill(2) if day else "*"
+    day = f"*{day:0>2}" if day else "*"
     parts = {
         "a": 0b01,
         "1": 0b01,
@@ -65,11 +66,12 @@ def _resolve(name: str, pattern: str, test: bool):
         "2": 0b10,
     }.get(part, 0b11)
 
-    for path in BASE_PATH.glob(f"{name}/{year}/{day}.*"):
-        year = path.parent.name
-        day = path.stem
-        if not year.isdecimal() or not day.isdecimal():
+    for path in BASE_PATH.glob(f"{name}/**/*{year}/{day}.*"):
+        year = NUMBER_RE.search(path.parent.name)
+        day = NUMBER_RE.search(path.stem)
+        if not year or not day:
             continue
+        year, day = year[0], day[0]
 
         suffix = "#" if test else ""
         input_path = BASE_PATH / f"input/{year}/{day}{suffix}.txt"
