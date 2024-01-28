@@ -38,11 +38,11 @@ inline fn calcNumber(comptime allow_words: bool, line: []const u8) u128 {
 }
 
 pub fn run(input: *utils.Input) !utils.Result {
-    var result = utils.Result{ 0, 0 };
+    var result = utils.Result{};
 
     while (input.next()) |line| {
-        result[0].? += calcNumber(false, line);
-        result[1].? += calcNumber(true, line);
+        result[0] += calcNumber(false, line);
+        result[1] += calcNumber(true, line);
     }
 
     return result;

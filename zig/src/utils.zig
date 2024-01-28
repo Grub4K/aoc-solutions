@@ -10,8 +10,8 @@ pub const Parts = enum {
 };
 
 pub const Result = struct {
-    ?u128 = null,
-    ?u128 = null,
+    u128 = 0,
+    u128 = 0,
 };
 
 pub const Info = struct {

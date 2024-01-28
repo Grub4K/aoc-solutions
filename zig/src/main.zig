@@ -22,7 +22,7 @@ fn fail(_stdout: anytype, msg: []const u8) !void {
     try stdout.flush();
 }
 
-fn _main() !void {
+pub fn main() !void {
     var years = try buildYears();
     defer years.deinit();
 
@@ -64,8 +64,4 @@ fn _main() !void {
         try stdout.writer().print("res, {?}, {?}\n", result);
         try stdout.flush();
     }
-}
-
-pub fn main() !void {
-    try _main();
 }
