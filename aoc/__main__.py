@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+
 from aoc.run import RUNNERS
 from aoc.run import execute
 
@@ -34,10 +36,8 @@ def get_args() -> tuple[str, list[str], bool]:
 
 
 def main():
-    try:
+    with contextlib.suppress(KeyboardInterrupt):
         execute(*get_args())
-    except KeyboardInterrupt:
-        pass
 
 
 if __name__ == "__main__":

@@ -16,11 +16,11 @@ class RunInfo:
     name: str
     year: str
     day: str
-    input: Path  # noqa: A003
+    input: Path
     parts: int
 
     @property
-    def id(self):  # noqa: A003
+    def id(self):
         return f"{self.name}-{self.year}-{self.day}"
 
 
@@ -109,15 +109,15 @@ def execute_runs(runner, runs: list[RunInfo]):
             print(f"{run.id}: ERROR: {result}", file=sys.stderr)
             continue
 
-        for part, result in zip([1, 2], result, strict=True):
-            if not run.parts & part or result is None:
+        for part, solution in zip([1, 2], result, strict=True):
+            if not run.parts & part or solution is None:
                 continue
 
-            if isinstance(result, Error):
-                print(f"{run.id}-{part}: ERROR: {result}", file=sys.stderr)
+            if isinstance(solution, Error):
+                print(f"{run.id}-{part}: ERROR: {solution}", file=sys.stderr)
 
             else:
-                print(f"{run.id}-{part}: {result}")
+                print(f"{run.id}-{part}: {solution}")
 
 
 def execute(name: str, patterns: list[str], test: bool):

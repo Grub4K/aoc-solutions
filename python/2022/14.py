@@ -59,7 +59,7 @@ def simulate(obstructions: set[tuple[int, int]], limit: int):
                 obstructions.add((current_x, current_y))
                 break
 
-    raise
+    assert False
 
 
 def run(obstructions: set[tuple[int, int]]):

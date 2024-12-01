@@ -40,9 +40,12 @@ def run(data):
             for x_shift, y_shift in SHIFTS:
                 x_shifted, y_shifted = test_point = (x + x_shift, y + y_shift)
                 # Task 1
-                if x_shifted in x_range and y_shifted in y_range:
-                    if current >= data[y_shifted][x_shifted]:
-                        is_smaller = False
+                if (
+                    (x_shifted in x_range)
+                    and (y_shifted in y_range)
+                    and current >= data[y_shifted][x_shifted]
+                ):
+                    is_smaller = False
                 # Task 2
                 if test_point in points:
                     queue.put(test_point)

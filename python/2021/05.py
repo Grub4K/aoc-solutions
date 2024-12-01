@@ -23,9 +23,8 @@ def make_range(a, b):
 def calculate_intersections(lines, process_diagonals):
     points = Counter()
     for from_, to in lines:
-        if not process_diagonals:
-            if from_.X != to.X and from_.Y != to.Y:
-                continue
+        if not process_diagonals and from_.X != to.X and from_.Y != to.Y:
+            continue
 
         x_range = make_range(from_.X, to.X)
         y_range = make_range(from_.Y, to.Y)
