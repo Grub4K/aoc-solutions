@@ -1,8 +1,4 @@
-#!/bin/bash
-
-
-
-input_file="../input/06.txt"
+#!/usr/bin/env bash
 
 function solution {
     local -a fish
@@ -14,10 +10,10 @@ function solution {
         (( fish[i]++ ))
     done
 
-    stop=0 from=0 to=6
-    for end in "$@"; do
-        start=$stop
-        stop=$end
+    (( stop=0, from=0, to=6 ))
+    for end; do
+        start="${stop}"
+        stop="${end}"
 
         for (( i = start; i < stop; i++ )); do
             (( to=(to+1) % 9, fish[to]+=fish[from], from=(from+1) % 9 ))
@@ -28,8 +24,8 @@ function solution {
             (( counter+= fish[i]))
         done
 
-        printf '%s\n' "$counter"
+        printf '%s\n' "${counter}"
     done
 }
 
-solution 80 256 <"$input_file"
+solution 80 256 <"${1}"
