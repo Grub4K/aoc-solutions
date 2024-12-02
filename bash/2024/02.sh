@@ -2,20 +2,16 @@
 
 isSafeA() {
     local -n list="${1}"
-    local i diffs diff
+    local i diff trend
 
 
     for (( i = 1; i < ${#list[@]}; i++ )); do
-        if [[ -z "${diffs}" ]]; then
-            if (( list[i-1] < list[i] )); then
-                diffs=" 1 2 3 "
-            else
-                diffs=" -1 -2 -3 "
-            fi
+        if (( !trend )); then
+            (( trend = ((list[i-1] < list[i]) << 1) - 1 ))
         fi
 
         (( diff = list[i] - list[i-1] ))
-        if [[ "${diffs/ ${diff} /}" == "${diffs}" ]]; then
+        if (( diff != trend && diff != 2 * trend && diff != 3 * trend )); then
             return 1
         fi
     done
@@ -25,11 +21,11 @@ isSafeA() {
 
 isSafeB() {
     local -n list="${1}"
-    local i diffs diff skip prev
+    local i diff trend skip prev found
 
     for (( skip = 0; skip < ${#list[@]}; skip++ )); do
-        unset diffs prev
-        (( found = 1 ))
+        unset prev
+        (( trend = 0, found = 1 ))
         for (( i = 0; i < ${#list[@]}; i++ )); do
             (( skip == i )) && continue
             if [[ -z "${prev}" ]]; then
@@ -37,16 +33,12 @@ isSafeB() {
                 continue
             fi
 
-            if [[ -z "${diffs}" ]]; then
-                if (( prev < list[i] )); then
-                    diffs=" 1 2 3 "
-                else
-                    diffs=" -1 -2 -3 "
-                fi
+            if (( !trend )); then
+                (( trend = ((prev < list[i]) << 1) - 1 ))
             fi
 
             (( diff = list[i] - prev ))
-            if [[ "${diffs/ ${diff} /}" == "${diffs}" ]]; then
+            if (( diff != trend && diff != 2 * trend && diff != 3 * trend )); then
                 (( found = 0 ))
                 break
             fi
@@ -71,7 +63,7 @@ solution() {
 
         if isSafeB line; then
             (( sumB += 1 ))
-        fi        
+        fi
     done
 
     printf '%s\n' "${sumA}" "${sumB}"
