@@ -20,9 +20,11 @@ def is_safe(line: list[int]):
     return True
 
 
+def windows(line: list[int]):
+    for index, _ in enumerate(line):
+        yield line[:index] + line[index + 1 :]
+
+
 def run(data: list[list[int]]):
     yield sum(map(is_safe, data))
-    yield sum(
-        any(is_safe(line[:index] + line[index + 1 :]) for index, _ in enumerate(line))
-        for line in data
-    )
+    yield sum(any(map(is_safe, windows(line))) for line in data)
