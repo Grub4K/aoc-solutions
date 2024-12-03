@@ -6,6 +6,7 @@ const days = .{
     .{ "2023-02", @import("2023/02.zig") },
     .{ "2023-07", @import("2023/07.zig") },
     .{ "2024-01", @import("2024/01.zig") },
+    .{ "2024-03", @import("2024/03.zig") },
 };
 
 const RunFunctionType = *const fn (*utils.Input) anyerror!utils.Result;
