@@ -65,6 +65,9 @@ class Vector:
     def normalize(self, /):
         return self.__class__(self.x / self.length, self.y / self.length)
 
+    def __neg__(self, /):
+        return self.__class__(-self.x, -self.y)
+
     def __mul__(self, other, /):
         if not isinstance(other, int | float):
             return NotImplemented
