@@ -33,21 +33,21 @@ func day02(r io.Reader) aoc.Result {
 
 		for numEnc := start; numEnc <= end; numEnc++ {
 			num := strconv.AppendUint(buf[:0:32], numEnc, 10)
-			size := len(num)
+			length := len(num) / 2
 			// Part 1
-			if size&1 == 0 && bytes.Equal(num[:size>>1], num[size>>1:]) {
+			if bytes.Equal(num[:length], num[length:]) {
 				counterA += numEnc
 			}
 
 			// Part 2
 		nextSize:
-			for length := range size>>1 + 1 {
-				if length == 0 || size%length != 0 {
+			for ; length > 0; length-- {
+				if len(num)%length != 0 {
 					continue
 				}
 				control := num[0:length]
-				for i := length; i < size; i += length {
-					part := num[i : i+length]
+				for offset := length; offset < len(num); offset += length {
+					part := num[offset : offset+length]
 					if !bytes.Equal(part, control) {
 						continue nextSize
 					}
