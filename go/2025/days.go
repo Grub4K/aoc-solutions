@@ -8,4 +8,5 @@ var Days = map[uint8]aoc.Solver{
 	1: day01,
 	2: day02,
 	3: d03{}.run,
+	4: d04{}.run,
 }
