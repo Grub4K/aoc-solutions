@@ -104,7 +104,13 @@ def execute_runs(runner, runs: list[RunInfo]):
     else:
         results = runner.run(runs)
 
-    for run, result in zip(runs, results, strict=True):
+    try:
+        parts = list(zip(runs, results, strict=True))
+    except ValueError:
+        print("ERROR: runner did not return correct amount of results", file=sys.stderr)
+        return
+
+    for run, result in parts:
         if isinstance(result, Error):
             print(f"{run.id}: ERROR: {result}", file=sys.stderr)
             continue

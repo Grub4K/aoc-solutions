@@ -18,6 +18,8 @@ func main() {
 		os.Exit(1)
 	}()
 
+	osStdout := os.Stdout
+	os.Stdout = os.Stderr
 	for result := range process(func(yield func(Task) bool) {
 		for i := 1; i < len(os.Args); i += 3 {
 			year, err := strconv.ParseUint(os.Args[i], 10, 16)
@@ -33,7 +35,7 @@ func main() {
 			}
 		}
 	}) {
-		fmt.Fprintf(os.Stdout, "%s\n", result.Serialize())
+		fmt.Fprintf(osStdout, "%s\n", result.Serialize())
 	}
 }
 
