@@ -2,9 +2,8 @@ package y2025
 
 import (
 	"bufio"
-	"cmp"
+	"container/heap"
 	"io"
-	"math"
 	"slices"
 	"strconv"
 	"strings"
@@ -16,15 +15,15 @@ type d08Vector3 struct {
 	X, Y, Z uint64
 }
 
-func (v *d08Vector3) Dist(other d08Vector3) float64 {
+func (v *d08Vector3) Dist(other d08Vector3) uint64 {
 	dx := v.X - other.X
 	dy := v.Y - other.Y
 	dz := v.Z - other.Z
-	return math.Sqrt(float64(dx*dx + dy*dy + dz*dz))
+	return dx*dx + dy*dy + dz*dz
 }
 
 type d08Dist struct {
-	Dist float64
+	Dist uint64
 	A, B d08Vector3
 }
 
@@ -36,19 +35,16 @@ func (d d08) run(r io.Reader) aoc.Result {
 		return aoc.Error(err)
 	}
 
-	var dists []*d08Dist
+	dists := &d08Distances{}
 	for i, point := range points {
 		for _, other := range points[i+1:] {
-			dists = append(dists, &d08Dist{
+			heap.Push(dists, &d08Dist{
 				Dist: point.Dist(other),
 				A:    point,
 				B:    other,
 			})
 		}
 	}
-	slices.SortFunc(dists, func(a, b *d08Dist) int {
-		return cmp.Compare(a.Dist, b.Dist)
-	})
 
 	var resultA int
 	var resultB uint64
@@ -57,24 +53,22 @@ func (d d08) run(r io.Reader) aoc.Result {
 	conns := 0
 	groupCount := 0
 	groups := map[d08Vector3]int{}
-	for _, dist := range dists {
+	for {
+		dist := heap.Pop(dists).(*d08Dist)
+
 		// part a
 		if conns == 1000 {
-			conns = -1
 			counts := make([]int, index)
 			for _, group := range groups {
 				counts[group-1] += 1
 			}
-			slices.SortFunc(counts, func(a, b int) int {
-				return b - a
-			})
+			slices.Sort(counts)
 			resultA = 1
 			for _, count := range counts[:3] {
 				resultA *= count
 			}
-		} else {
-			conns += 1
 		}
+		conns += 1
 
 		aGroup := groups[dist.A]
 		bGroup := groups[dist.B]
@@ -112,6 +106,34 @@ func (d d08) run(r io.Reader) aoc.Result {
 
 	return aoc.Solution(resultA, resultB)
 }
+
+var _ heap.Interface = (*d08Distances)(nil)
+
+type d08Distances []*d08Dist
+
+func (d *d08Distances) Len() int {
+	return len(*d)
+}
+
+func (d *d08Distances) Less(i, j int) bool {
+	return (*d)[i].Dist < (*d)[j].Dist
+}
+
+func (d *d08Distances) Swap(i, j int) {
+	(*d)[i], (*d)[j] = (*d)[j], (*d)[i]
+}
+
+func (d *d08Distances) Push(a any) {
+	*d = append(*d, a.(*d08Dist))
+}
+
+func (d *d08Distances) Pop() any {
+	last := len(*d)
+	val := (*d)[last-1]
+	*d = (*d)[:last-1]
+	return val
+}
+
 func (d d08) parse(r io.Reader) ([]d08Vector3, error) {
 	var points []d08Vector3
 
